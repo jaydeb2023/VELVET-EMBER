@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELVET & EMBER — Café · Bar · Lounge</title>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Cormorant:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Josefin+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --ink:#0C0A08;
+  --ink2:#161310;
+  --ink3:#1E1A16;
+  --gold:#C9A24E;
+  --gold2:#E8BF6A;
+  --gold-pale:rgba(201,162,78,.12);
+  --amber:#B55A1C;
+  --cream:#F5EDD8;
+  --cream2:#EDE0C4;
+  --warm:#8B6F4E;
+  --muted:rgba(245,237,216,.5);
+  --border:rgba(201,162,78,.18);
+  --glow:rgba(201,162,78,.2);
+  --red:#8B1A1A;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--cream);font-family:'Josefin Sans',sans-serif;overflow-x:hidden;cursor:none}
+
+/* ── GRAIN OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.045'/%3E%3C/svg%3E");
+  opacity:.6;
+}
+
+/* ── CURSOR ── */
+.cur{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:99999;transition:transform .1s,background .2s;mix-blend-mode:difference}
+.cur-r{position:fixed;width:36px;height:36px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;z-index:99998;transition:all .2s ease;opacity:.6}
+.cur.xl{transform:scale(3)}
+.cur-r.xl{width:60px;height:60px}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 72px;
+  background:linear-gradient(to bottom,rgba(12,10,8,.95) 0%,transparent 100%);
+  transition:background .4s;
+}
+nav.solid{background:rgba(12,10,8,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+
+.logo{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none}
+.logo-main{
+  font-family:'Abril Fatface',serif;
+  font-size:26px;letter-spacing:6px;color:var(--gold);
+  text-shadow:0 0 30px rgba(201,162,78,.3);
+}
+.logo-sub{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:8px;font-weight:300;letter-spacing:8px;text-transform:uppercase;
+  color:rgba(201,162,78,.55);
+}
+.logo-divider{
+  display:flex;align-items:center;gap:8px;
+  font-size:7px;letter-spacing:5px;color:rgba(201,162,78,.35);margin:1px 0;
+}
+.logo-divider::before,.logo-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{
+  font-size:11px;font-weight:300;letter-spacing:4px;text-transform:uppercase;
+  color:rgba(245,237,216,.6);text-decoration:none;transition:color .3s;position:relative;
+}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
+.nav-links a:hover{color:var(--gold)}
+.nav-links a:hover::after{width:100%}
+
+.nav-reserve{
+  font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;
+  border:1px solid var(--gold);color:var(--gold);
+  padding:11px 24px;background:transparent;cursor:pointer;
+  text-decoration:none;display:inline-block;
+  transition:all .3s;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);
+}
+.nav-reserve:hover{background:var(--gold);color:var(--ink)}
+
+/* ── HERO ── */
+.hero{
+  position:relative;height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to bottom,rgba(12,10,8,.45) 0%,rgba(12,10,8,.2) 40%,rgba(12,10,8,.8) 85%,var(--ink) 100%),
+    url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1800&q=90') center/cover no-repeat;
+}
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(139,90,28,.12) 0%,transparent 50%,rgba(139,26,26,.08) 100%);
+}
+/* vignette */
+.hero-bg::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 80% at 50% 50%,transparent 40%,rgba(12,10,8,.7) 100%);
+}
+.hero-content{position:relative;z-index:2;padding:0 32px}
+.hero-eyebrow{
+  font-size:9px;font-weight:300;letter-spacing:10px;text-transform:uppercase;
+  color:rgba(201,162,78,.7);margin-bottom:28px;
+  animation:fadeD .9s ease both;
+  display:flex;align-items:center;justify-content:center;gap:20px;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'✦';font-size:8px;color:var(--gold);opacity:.6}
+.hero-title{
+  font-family:'Abril Fatface',serif;
+  font-size:clamp(72px,12vw,160px);
+  line-height:.9;letter-spacing:4px;
+  color:var(--cream);margin-bottom:6px;
+  text-shadow:0 0 80px rgba(201,162,78,.15);
+  animation:fadeD .9s .1s ease both;
+}
+.hero-title .amp{color:var(--gold);font-family:'Cormorant',serif;font-style:italic;font-size:.8em}
+.hero-sub-title{
+  font-family:'Cormorant',serif;font-style:italic;
+  font-size:clamp(22px,3vw,38px);font-weight:300;
+  color:rgba(245,237,216,.6);letter-spacing:4px;margin-bottom:36px;
+  animation:fadeD .9s .2s ease both;
+}
+.hero-divider{
+  display:flex;align-items:center;justify-content:center;gap:20px;
+  margin-bottom:36px;animation:fadeD .9s .25s ease both;
+}
+.hero-divider::before,.hero-divider::after{content:'';flex:1;max-width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
+.hero-divider span{font-size:16px;color:var(--gold);opacity:.7}
+.hero-tags{
+  display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+  animation:fadeD .9s .3s ease both;margin-bottom:44px;
+}
+.htag{
+  font-size:9px;font-weight:300;letter-spacing:4px;text-transform:uppercase;
+  border:1px solid rgba(201,162,78,.25);color:rgba(245,237,216,.6);
+  padding:8px 18px;
+}
+.hero-btns{
+  display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
+  animation:fadeD .9s .4s ease both;
+}
+.btn-gold{
+  font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;
+  background:var(--gold);color:var(--ink);
+  padding:16px 40px;border:none;cursor:pointer;
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+  text-decoration:none;display:inline-flex;align-items:center;gap:10px;
+  transition:all .3s;box-shadow:0 8px 30px rgba(201,162,78,.25);
+}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 14px 40px rgba(201,162,78,.35)}
+.btn-ghost{
+  font-size:10px;font-weight:300;letter-spacing:4px;text-transform:uppercase;
+  border:1px solid rgba(245,237,216,.25);color:rgba(245,237,216,.75);
+  padding:16px 36px;background:transparent;cursor:pointer;
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  transition:all .3s;
+}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Scroll hint */
+.scroll-hint{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;
+  font-size:8px;letter-spacing:4px;text-transform:uppercase;color:rgba(201,162,78,.45);
+  animation:fadeD 1s .7s ease both;
+}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,transparent,var(--gold));animation:scrollDown 2s infinite}
+@keyframes scrollDown{0%,100%{opacity:.3;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
+@keyframes fadeD{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TICKER ── */
+.ticker-wrap{
+  background:var(--gold);overflow:hidden;padding:11px 0;
+  position:relative;z-index:1;
+}
+.ticker{display:flex;animation:ticker 30s linear infinite;white-space:nowrap}
+.ticker-item{
+  font-family:'Josefin Sans',sans-serif;font-size:11px;
+  font-weight:300;letter-spacing:5px;text-transform:uppercase;
+  color:var(--ink);padding:0 36px;
+  display:flex;align-items:center;gap:36px;
+}
+.ticker-item::after{content:'◆';font-size:8px;opacity:.6}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTION BASE ── */
+section{padding:100px 72px;position:relative;z-index:1}
+.s-eyebrow{
+  display:flex;align-items:center;gap:14px;
+  font-size:9px;font-weight:300;letter-spacing:6px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+}
+.s-eyebrow::before{content:'';width:28px;height:1px;background:var(--gold)}
+.s-title{
+  font-family:'Abril Fatface',serif;
+  font-size:clamp(44px,6vw,90px);line-height:.95;
+  color:var(--cream);margin-bottom:12px;letter-spacing:2px;
+}
+.s-title em{font-family:'Cormorant',serif;font-style:italic;color:var(--gold);font-size:1.05em}
+.s-desc{
+  font-family:'Cormorant',serif;font-size:17px;font-weight:300;
+  line-height:1.85;color:rgba(245,237,216,.55);max-width:480px;
+}
+
+/* ── ATMOSPHERE ── */
+.atmos{background:var(--ink)}
+.atmos-grid{
+  display:grid;
+  grid-template-columns:1.4fr 1fr 1fr;
+  grid-template-rows:320px 240px;
+  gap:6px;margin-top:64px;
+}
+.ag-item{
+  overflow:hidden;position:relative;cursor:pointer;
+}
+.ag-item:nth-child(1){grid-row:span 2}
+.ag-item img{
+  width:100%;height:100%;object-fit:cover;
+  filter:saturate(.55) brightness(.85);
+  transition:filter .6s,transform .6s;
+}
+.ag-item:hover img{filter:saturate(.85) brightness(.95);transform:scale(1.04)}
+.ag-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(12,10,8,.7) 0%,transparent 50%);
+  display:flex;align-items:flex-end;padding:20px;
+  opacity:0;transition:opacity .4s;
+}
+.ag-item:hover .ag-overlay{opacity:1}
+.ag-label{
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);
+}
+.ag-item::before{
+  content:'';position:absolute;inset:0;z-index:1;
+  border:1px solid rgba(201,162,78,0);transition:border-color .4s;
+}
+.ag-item:hover::before{border-color:rgba(201,162,78,.3)}
+
+/* ── MENU ── */
+.menu-sec{background:var(--ink2)}
+.menu-tabs{
+  display:flex;gap:0;margin-top:56px;margin-bottom:48px;
+  border-bottom:1px solid var(--border);
+}
+.mtab{
+  font-size:10px;font-weight:300;letter-spacing:5px;text-transform:uppercase;
+  color:rgba(245,237,216,.4);padding:14px 28px;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .3s;
+  background:none;border-top:none;border-left:none;border-right:none;
+  margin-bottom:-1px;
+}
+.mtab.active,.mtab:hover{color:var(--gold);border-bottom-color:var(--gold)}
+.menu-panel{display:none}
+.menu-panel.active{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:var(--border)}
+.menu-card{
+  background:var(--ink2);padding:28px 28px;
+  display:flex;gap:18px;align-items:flex-start;
+  transition:background .3s;cursor:default;
+}
+.menu-card:hover{background:var(--ink3)}
+.mc-img{
+  width:70px;height:70px;border-radius:0;object-fit:cover;
+  filter:saturate(.7);flex-shrink:0;
+  border:1px solid var(--border);
+  transition:filter .3s;
+}
+.menu-card:hover .mc-img{filter:saturate(1)}
+.mc-body{flex:1}
+.mc-name{
+  font-family:'Cormorant',serif;font-size:19px;font-weight:600;
+  color:var(--cream);margin-bottom:4px;
+}
+.mc-desc{font-size:11px;font-weight:300;letter-spacing:.5px;color:var(--muted);line-height:1.6;margin-bottom:10px}
+.mc-bottom{display:flex;align-items:center;justify-content:space-between}
+.mc-price{
+  font-family:'Abril Fatface',serif;font-size:20px;
+  color:var(--gold);letter-spacing:1px;
+}
+.mc-tag{
+  font-size:8px;font-weight:600;letter-spacing:3px;text-transform:uppercase;
+  border:1px solid rgba(201,162,78,.3);color:var(--gold);
+  padding:3px 10px;
+}
+
+/* ── SPECIALS ── */
+.specials{background:var(--ink)}
+.spec-inner{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch}
+.spec-left{
+  position:relative;overflow:hidden;min-height:580px;
+}
+.spec-left img{
+  width:100%;height:100%;object-fit:cover;position:absolute;inset:0;
+  filter:saturate(.5) brightness(.7);
+}
+.spec-left::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to right,transparent 60%,var(--ink));
+}
+.spec-right{
+  background:var(--ink3);padding:72px 60px;
+  border:1px solid var(--border);border-left:none;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.spec-items{margin-top:40px;display:flex;flex-direction:column;gap:0}
+.spec-item{
+  padding:22px 0;border-bottom:1px solid rgba(201,162,78,.08);
+  display:flex;align-items:flex-start;gap:20px;
+  transition:padding-left .3s;cursor:default;
+}
+.spec-item:hover{padding-left:10px}
+.spec-num{
+  font-family:'Abril Fatface',serif;font-size:34px;
+  color:rgba(201,162,78,.15);line-height:1;flex-shrink:0;width:52px;
+  transition:color .3s;
+}
+.spec-item:hover .spec-num{color:rgba(201,162,78,.35)}
+.spec-name{
+  font-family:'Cormorant',serif;font-size:21px;font-weight:600;
+  color:var(--cream);margin-bottom:4px;
+}
+.spec-desc{font-size:11px;font-weight:300;letter-spacing:.5px;color:var(--muted);line-height:1.7}
+.spec-price{
+  font-family:'Abril Fatface',serif;font-size:18px;
+  color:var(--gold);margin-left:auto;flex-shrink:0;
+}
+
+/* ── EXPERIENCE ── */
+.experience{background:var(--ink2)}
+.exp-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);margin-top:64px;
+}
+.exp-card{
+  background:var(--ink2);padding:44px 36px;
+  text-align:center;
+  transition:background .4s;position:relative;overflow:hidden;
+}
+.exp-card::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform .4s;
+}
+.exp-card:hover{background:var(--ink3)}
+.exp-card:hover::before{transform:scaleX(1)}
+.exp-icon{font-size:40px;margin-bottom:20px;filter:grayscale(.3)}
+.exp-name{
+  font-family:'Abril Fatface',serif;font-size:24px;
+  color:var(--cream);margin-bottom:10px;letter-spacing:1px;
+}
+.exp-txt{
+  font-family:'Cormorant',serif;font-size:15px;font-weight:300;
+  line-height:1.8;color:var(--muted);
+}
+.exp-time{
+  margin-top:18px;font-size:9px;font-weight:300;letter-spacing:4px;
+  text-transform:uppercase;color:var(--gold);
+  border-top:1px solid var(--border);padding-top:18px;
+}
+
+/* ── EVENTS ── */
+.events{background:var(--ink)}
+.events-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:64px}
+.ev-card{
+  background:var(--ink2);border:1px solid var(--border);
+  overflow:hidden;transition:all .4s;
+  position:relative;
+}
+.ev-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px rgba(201,162,78,.2)}
+.ev-img{height:200px;overflow:hidden;position:relative}
+.ev-img img{width:100%;height:100%;object-fit:cover;filter:saturate(.5);transition:all .5s}
+.ev-card:hover .ev-img img{filter:saturate(.8);transform:scale(1.05)}
+.ev-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--ink2))}
+.ev-date{
+  position:absolute;top:16px;left:16px;z-index:2;
+  background:var(--gold);color:var(--ink);
+  padding:8px 12px;text-align:center;
+}
+.ev-date .day{font-family:'Abril Fatface',serif;font-size:26px;line-height:1}
+.ev-date .month{font-size:8px;font-weight:600;letter-spacing:3px;text-transform:uppercase}
+.ev-body{padding:24px}
+.ev-type{
+  font-size:8px;font-weight:600;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.ev-name{
+  font-family:'Cormorant',serif;font-size:22px;font-weight:600;
+  color:var(--cream);margin-bottom:8px;
+}
+.ev-info{font-size:11px;font-weight:300;letter-spacing:.5px;color:var(--muted);line-height:1.6}
+.ev-meta{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:16px;padding-top:16px;border-top:1px solid rgba(201,162,78,.1);
+}
+.ev-time{font-size:10px;letter-spacing:2px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.ev-time i{color:var(--gold);font-size:10px}
+.ev-btn{
+  font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);border:1px solid rgba(201,162,78,.35);
+  padding:6px 14px;background:none;cursor:pointer;transition:all .3s;
+}
+.ev-btn:hover{background:var(--gold);color:var(--ink)}
+
+/* ── RESERVATION ── */
+.reservation{
+  background:var(--ink3);
+  position:relative;overflow:hidden;
+}
+.reservation::before{
+  content:'';position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1525610553991-2bede1a236e2?w=1400&q=70') center/cover;
+  filter:brightness(.18) saturate(.4);
+}
+.res-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.res-left .s-desc{max-width:400px}
+.res-vibe{
+  margin-top:40px;display:flex;flex-direction:column;gap:16px;
+}
+.rv-item{
+  display:flex;gap:14px;align-items:center;
+  font-size:11px;font-weight:300;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(245,237,216,.5);
+}
+.rv-item i{color:var(--gold);font-size:14px;flex-shrink:0}
+.res-form{
+  background:rgba(12,10,8,.85);
+  border:1px solid var(--border);
+  padding:44px;
+  backdrop-filter:blur(16px);
+}
+.res-form h3{
+  font-family:'Abril Fatface',serif;font-size:28px;
+  color:var(--cream);margin-bottom:6px;letter-spacing:2px;
+}
+.res-form p{
+  font-family:'Cormorant',serif;font-style:italic;
+  font-size:15px;color:var(--muted);margin-bottom:28px;
+}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.fg label{font-size:9px;font-weight:300;letter-spacing:4px;text-transform:uppercase;color:rgba(201,162,78,.55)}
+.fg input,.fg select,.fg textarea{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(201,162,78,.15);
+  color:var(--cream);padding:13px 16px;
+  font-family:'Josefin Sans',sans-serif;font-size:13px;font-weight:300;
+  outline:none;transition:all .3s;
+}
+.fg select option{background:var(--ink2)}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(245,237,216,.25)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);background:rgba(201,162,78,.06);box-shadow:0 0 0 2px rgba(201,162,78,.08)}
+.fg textarea{min-height:80px;resize:vertical}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.res-sub{
+  width:100%;margin-top:8px;padding:15px;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;font-weight:600;letter-spacing:5px;text-transform:uppercase;
+  background:var(--gold);color:var(--ink);border:none;cursor:pointer;
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+  transition:all .3s;box-shadow:0 6px 24px rgba(201,162,78,.2);
+}
+.res-sub:hover{background:var(--gold2);box-shadow:0 10px 36px rgba(201,162,78,.35)}
+
+/* ── CONTACT + MAP ── */
+.contact{background:var(--ink2)}
+.contact-inner{display:grid;grid-template-columns:1fr 1.5fr;gap:0;align-items:stretch}
+.contact-details{
+  background:var(--gold);padding:56px 48px;
+  display:flex;flex-direction:column;justify-content:center;gap:32px;
+}
+.cd-logo{
+  font-family:'Abril Fatface',serif;font-size:22px;
+  color:var(--ink);letter-spacing:4px;margin-bottom:8px;
+}
+.cd-tagline{
+  font-family:'Cormorant',serif;font-style:italic;
+  font-size:15px;color:rgba(12,10,8,.6);
+}
+.cd-item{display:flex;gap:14px;align-items:flex-start}
+.cd-item i{font-size:16px;color:var(--ink);opacity:.6;flex-shrink:0;margin-top:3px}
+.cd-label{font-size:8px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(12,10,8,.5);margin-bottom:3px}
+.cd-val{font-size:14px;font-weight:300;color:var(--ink)}
+.map-container{position:relative;overflow:hidden;filter:grayscale(.85) sepia(.3)}
+.map-container:hover{filter:grayscale(.4) sepia(.15)}
+.map-container iframe{width:100%;height:100%;border:none;display:block;min-height:400px}
+.map-tag{
+  position:absolute;top:20px;right:20px;z-index:2;
+  background:var(--ink);border:1px solid var(--gold);
+  padding:10px 18px;
+  font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);pointer-events:none;
+}
+
+/* ── SOCIAL ── */
+.social-strip{
+  background:var(--ink);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:28px 72px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+}
+.ss-txt{
+  font-size:9px;font-weight:300;letter-spacing:5px;text-transform:uppercase;
+  color:rgba(201,162,78,.5);
+}
+.ss-icons{display:flex;gap:12px}
+.ss-ic{
+  width:44px;height:44px;
+  border:1px solid rgba(201,162,78,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:rgba(245,237,216,.4);text-decoration:none;
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.ss-ic::before{
+  content:'';position:absolute;inset:0;
+  background:var(--gold);transform:scaleY(0);transform-origin:bottom;transition:transform .3s;
+}
+.ss-ic i{position:relative;z-index:1}
+.ss-ic:hover::before{transform:scaleY(1)}
+.ss-ic:hover{color:var(--ink);border-color:var(--gold)}
+
+/* ── FOOTER ── */
+footer{background:rgba(8,7,5,.98);padding:64px 72px;border-top:1px solid var(--border)}
+.footer-inner{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:48px;
+}
+.fb p{
+  font-family:'Cormorant',serif;font-size:14px;font-weight:300;
+  line-height:1.9;color:rgba(245,237,216,.35);margin-top:16px;max-width:260px;
+}
+.fc h4{
+  font-size:9px;font-weight:600;letter-spacing:5px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:20px;
+}
+.fc ul{list-style:none}
+.fc li{margin-bottom:10px}
+.fc a{
+  font-size:12px;font-weight:300;letter-spacing:1px;
+  color:rgba(245,237,216,.35);text-decoration:none;transition:color .2s;
+}
+.fc a:hover{color:var(--cream)}
+.footer-bot{
+  padding-top:28px;border-top:1px solid rgba(201,162,78,.08);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.footer-bot p{font-size:11px;font-weight:300;letter-spacing:1px;color:rgba(245,237,216,.25)}
+.footer-bot span{color:var(--gold)}
+.footer-bot-links{display:flex;gap:20px}
+.footer-bot-links a{font-size:10px;letter-spacing:2px;color:rgba(245,237,216,.25);text-decoration:none;transition:color .2s}
+.footer-bot-links a:hover{color:var(--gold)}
+
+/* ── CHATBOT ── */
+.chat-fab{
+  position:fixed;bottom:32px;right:32px;z-index:5000;
+  width:60px;height:60px;
+  background:var(--gold);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:var(--ink);
+  clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+  box-shadow:0 8px 30px rgba(201,162,78,.3);
+  animation:fabPulse 2.5s infinite;transition:transform .3s;
+}
+.chat-fab:hover{transform:scale(1.1)}
+@keyframes fabPulse{
+  0%,100%{box-shadow:0 8px 30px rgba(201,162,78,.3)}
+  50%{box-shadow:0 8px 50px rgba(201,162,78,.5),0 0 0 10px rgba(201,162,78,.07)}
+}
+.fab-dot{
+  position:absolute;top:2px;right:8px;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--amber);border:2px solid var(--ink);
+  font-size:9px;font-weight:700;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+}
+.chatwin{
+  position:fixed;bottom:108px;right:32px;z-index:4999;
+  width:360px;
+  background:var(--ink2);
+  border:1px solid var(--border);
+  display:flex;flex-direction:column;
+  box-shadow:0 24px 64px rgba(0,0,0,.8),0 0 0 1px rgba(201,162,78,.08);
+  transform:translateY(20px) scale(.95);opacity:0;pointer-events:none;
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);
+  overflow:hidden;
+}
+.chatwin.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all}
+.chat-head{
+  background:linear-gradient(135deg,rgba(201,162,78,.2),rgba(201,162,78,.05));
+  border-bottom:1px solid var(--border);
+  padding:18px 20px;display:flex;align-items:center;gap:14px;
+}
+.chat-logo{
+  font-family:'Abril Fatface',serif;font-size:16px;color:var(--gold);letter-spacing:2px;
+}
+.chat-sub{font-size:10px;font-weight:300;letter-spacing:2px;color:rgba(201,162,78,.55)}
+.chat-live{
+  margin-left:auto;display:flex;align-items:center;gap:5px;
+  font-size:10px;color:rgba(245,237,216,.4);letter-spacing:1px;
+}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.chat-msgs{
+  padding:16px;display:flex;flex-direction:column;gap:10px;
+  max-height:300px;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+}
+.chat-msgs::-webkit-scrollbar{width:3px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border)}
+.cm{display:flex;gap:8px;align-items:flex-end;max-width:88%}
+.cm.b{align-self:flex-start}
+.cm.u{align-self:flex-end;flex-direction:row-reverse}
+.cav{
+  width:26px;height:26px;flex-shrink:0;
+  background:var(--gold);
+  clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:var(--ink);
+}
+.cb{padding:10px 13px;font-size:13px;line-height:1.55;font-weight:300}
+.cm.b .cb{background:var(--ink3);border-left:2px solid var(--gold);color:var(--cream)}
+.cm.u .cb{background:var(--gold);color:var(--ink);font-weight:400}
+.chat-chips{
+  padding:8px 14px 4px;display:flex;flex-wrap:wrap;gap:6px;
+}
+.chip{
+  font-size:10px;font-weight:300;letter-spacing:2px;text-transform:uppercase;
+  border:1px solid rgba(201,162,78,.25);color:rgba(201,162,78,.7);
+  background:transparent;padding:5px 12px;cursor:pointer;transition:all .2s;
+}
+.chip:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.chat-inp-wrap{
+  padding:12px 14px;border-top:1px solid var(--border);
+  display:flex;gap:8px;align-items:center;
+}
+.cinp{
+  flex:1;background:rgba(255,255,255,.04);
+  border:1px solid rgba(201,162,78,.15);
+  color:var(--cream);padding:10px 14px;
+  font-family:'Josefin Sans',sans-serif;font-size:12px;font-weight:300;
+  outline:none;transition:border-color .3s;
+}
+.cinp::placeholder{color:rgba(245,237,216,.25)}
+.cinp:focus{border-color:var(--gold)}
+.csnd{
+  width:38px;height:38px;background:var(--gold);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:var(--ink);transition:background .2s;flex-shrink:0;
+}
+.csnd:hover{background:var(--gold2)}
+
+/* REVEAL */
+.rev{opacity:0;transform:translateY(28px);transition:opacity .8s,transform .8s}
+.rev.in{opacity:1;transform:translateY(0)}
+.rev-l{opacity:0;transform:translateX(-24px);transition:opacity .9s,transform .9s}
+.rev-l.in{opacity:1;transform:translateX(0)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  nav{padding:18px 24px}
+  section{padding:70px 24px}
+  .spec-inner{grid-template-columns:1fr}
+  .spec-left{min-height:300px}
+  .res-inner{grid-template-columns:1fr}
+  .contact-inner{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  .social-strip{padding:20px 24px}
+  footer{padding:48px 24px}
+  .atmos-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .atmos-grid .ag-item:nth-child(1){grid-row:span 1}
+  .exp-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .chatwin{width:320px;right:16px}
+  .frow{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .exp-grid,.events-grid{grid-template-columns:1fr}
+  .menu-panel.active{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-r" id="curR"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">
+    <div class="logo-main">V&E</div>
+    <div class="logo-divider"><span>✦</span></div>
+    <div class="logo-sub">Café · Bar · Lounge</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#specials">Specials</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#reservation">Reserve</a></li>
+    <li><a href="#contact">Visit Us</a></li>
+  </ul>
+  <a href="#reservation" class="nav-reserve">Reserve a Table</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Established 2017 &nbsp;·&nbsp; Kolkata</div>
+    <h1 class="hero-title">VELVET <span class="amp">&</span><br>EMBER</h1>
+    <p class="hero-sub-title">Where the night finds its flavour</p>
+    <div class="hero-divider"><span>◆</span></div>
+    <div class="hero-tags">
+      <div class="htag">Specialty Coffee</div>
+      <div class="htag">Craft Cocktails</div>
+      <div class="htag">Live Music</div>
+      <div class="htag">Small Plates</div>
+    </div>
+    <div class="hero-btns">
+      <a href="#reservation" class="btn-gold"><i class="fas fa-utensils"></i> Reserve a Table</a>
+      <a href="#menu" class="btn-ghost"><i class="fas fa-scroll"></i> View Menu</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ticker-item">Open Daily 10 AM – 2 AM</div>
+    <div class="ticker-item">Happy Hours 5 PM – 8 PM</div>
+    <div class="ticker-item">Live Jazz Every Friday</div>
+    <div class="ticker-item">Private Bookings Available</div>
+    <div class="ticker-item">Craft Cocktails</div>
+    <div class="ticker-item">Specialty Pour-Over Coffee</div>
+    <div class="ticker-item">Open Daily 10 AM – 2 AM</div>
+    <div class="ticker-item">Happy Hours 5 PM – 8 PM</div>
+    <div class="ticker-item">Live Jazz Every Friday</div>
+    <div class="ticker-item">Private Bookings Available</div>
+    <div class="ticker-item">Craft Cocktails</div>
+    <div class="ticker-item">Specialty Pour-Over Coffee</div>
+  </div>
+</div>
+
+<!-- ATMOSPHERE -->
+<section class="atmos" id="atmos">
+  <div class="rev">
+    <div class="s-eyebrow">Our Space</div>
+    <h2 class="s-title">A <em>World</em> Apart</h2>
+    <p class="s-desc">Dimly lit corners, exposed brick, velvet booths and the clink of fine glassware. A sanctuary for those who appreciate depth in every sip.</p>
+  </div>
+  <div class="atmos-grid rev">
+    <div class="ag-item">
+      <img src="https://images.unsplash.com/photo-1525610553991-2bede1a236e2?w=800&q=80" alt="Interiors">
+      <div class="ag-overlay"><div class="ag-label">The Lounge</div></div>
+    </div>
+    <div class="ag-item">
+      <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&q=80" alt="Bar">
+      <div class="ag-overlay"><div class="ag-label">The Bar</div></div>
+    </div>
+    <div class="ag-item">
+      <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80" alt="Coffee">
+      <div class="ag-overlay"><div class="ag-label">Coffee Corner</div></div>
+    </div>
+    <div class="ag-item">
+      <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&q=80" alt="Cocktails">
+      <div class="ag-overlay"><div class="ag-label">Craft Cocktails</div></div>
+    </div>
+    <div class="ag-item">
+      <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80" alt="Food">
+      <div class="ag-overlay"><div class="ag-label">Small Plates</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu-sec" id="menu">
+  <div class="rev" style="text-align:center">
+    <div class="s-eyebrow" style="justify-content:center">What We Pour & Serve</div>
+    <h2 class="s-title" style="text-align:center">The <em>Menu</em></h2>
+  </div>
+  <div class="menu-tabs rev">
+    <button class="mtab active" onclick="switchTab('coffees',this)">Coffees</button>
+    <button class="mtab" onclick="switchTab('cocktails',this)">Cocktails</button>
+    <button class="mtab" onclick="switchTab('mocktails',this)">Mocktails</button>
+    <button class="mtab" onclick="switchTab('bites',this)">Small Plates</button>
+    <button class="mtab" onclick="switchTab('desserts',this)">Desserts</button>
+  </div>
+
+  <!-- COFFEES -->
+  <div class="menu-panel active" id="coffees">
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1497515114629-f71d768fd07c?w=200&q=80" alt="Espresso"><div class="mc-body"><div class="mc-name">Ember Espresso</div><p class="mc-desc">Double ristretto, single origin Coorg, pulled at 9 bar. Pure and uncompromising.</p><div class="mc-bottom"><div class="mc-price">₹180</div><div class="mc-tag">Signature</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=200&q=80" alt="Latte"><div class="mc-body"><div class="mc-name">Velvet Latte</div><p class="mc-desc">Ethiopian yirgacheffe, steamed oat milk, caramelised honey swirl. Silky and floral.</p><div class="mc-bottom"><div class="mc-price">₹260</div><div class="mc-tag">Popular</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=200&q=80" alt="Cold Brew"><div class="mc-body"><div class="mc-name">Midnight Cold Brew</div><p class="mc-desc">18-hour steep, Chikmagalur dark roast, black or with condensed milk cream.</p><div class="mc-bottom"><div class="mc-price">₹240</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1512568400610-62da28bc8a13?w=200&q=80" alt="Cappuccino"><div class="mc-body"><div class="mc-name">Classic Cappuccino</div><p class="mc-desc">House blend, perfectly equal parts espresso, steamed milk, and dry microfoam.</p><div class="mc-bottom"><div class="mc-price">₹220</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=200&q=80" alt="Matcha"><div class="mc-body"><div class="mc-name">Ceremonial Matcha</div><p class="mc-desc">Uji grade matcha, chilled oat milk, a whisper of vanilla bean. Grassy and bright.</p><div class="mc-bottom"><div class="mc-price">₹290</div><div class="mc-tag">New</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1542778624-a4f631a90428?w=200&q=80" alt="Pour Over"><div class="mc-body"><div class="mc-name">V60 Pour Over</div><p class="mc-desc">Single estate, light roast, guest rotating weekly. Presented tableside with tasting notes.</p><div class="mc-bottom"><div class="mc-price">₹320</div><div class="mc-tag">Specialty</div></div></div></div>
+  </div>
+
+  <!-- COCKTAILS -->
+  <div class="menu-panel" id="cocktails">
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=200&q=80" alt="Negroni"><div class="mc-body"><div class="mc-name">Velvet Negroni</div><p class="mc-desc">Tanqueray gin, Campari, Carpano Antica, orange expressed. Stirred cold, served neat.</p><div class="mc-bottom"><div class="mc-price">₹520</div><div class="mc-tag">Signature</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=200&q=80" alt="Whisky Sour"><div class="mc-body"><div class="mc-name">Ember Old Fashioned</div><p class="mc-desc">Woodford Reserve, demerara syrup, smoked with applewood chips, Angostura.</p><div class="mc-bottom"><div class="mc-price">₹580</div><div class="mc-tag">Popular</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1574364726805-5ae4f32c0e7c?w=200&q=80" alt="Espresso Martini"><div class="mc-body"><div class="mc-name">Espresso Martini</div><p class="mc-desc">Ketel One vodka, cold brew, Kahlúa, vanilla air, three coffee beans for luck.</p><div class="mc-bottom"><div class="mc-price">₹540</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=200&q=80" alt="Margarita"><div class="mc-body"><div class="mc-name">Smoked Mezcal Sour</div><p class="mc-desc">Del Maguey vida, yuzu, egg white, activated charcoal salt rim. Bold and smoky.</p><div class="mc-bottom"><div class="mc-price">₹560</div><div class="mc-tag">New</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1470338745628-171cf53de3a8?w=200&q=80" alt="Gin Tonic"><div class="mc-body"><div class="mc-name">Garden Gin & Tonic</div><p class="mc-desc">Hendrick's, elderflower tonic, cucumber ribbon, dried rose petals, mint sprig.</p><div class="mc-bottom"><div class="mc-price">₹480</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1568225985716-2b342ae2e9b0?w=200&q=80" alt="Rum"><div class="mc-body"><div class="mc-name">Dark & Stormy</div><p class="mc-desc">Gosling's Black Seal, Fever-Tree ginger beer, fresh lime, crystallised ginger.</p><div class="mc-bottom"><div class="mc-price">₹460</div></div></div></div>
+  </div>
+
+  <!-- MOCKTAILS -->
+  <div class="menu-panel" id="mocktails">
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=200&q=80" alt="Mocktail"><div class="mc-body"><div class="mc-name">Rose Blush Fizz</div><p class="mc-desc">Rose water, lychee, elderflower cordial, soda, edible petals. Delicate and floral.</p><div class="mc-bottom"><div class="mc-price">₹280</div><div class="mc-tag">Popular</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=200&q=80" alt="Lemonade"><div class="mc-body"><div class="mc-name">Ember Lemonade</div><p class="mc-desc">Charcoal lemonade with activated charcoal, ginger, and a hint of chilli. Dramatic and zingy.</p><div class="mc-bottom"><div class="mc-price">₹240</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200&q=80" alt="Mango"><div class="mc-body"><div class="mc-name">Mango Tango Cooler</div><p class="mc-desc">Alphonso mango, tajin rim, chamoy, sparkling water. Summer in a glass.</p><div class="mc-bottom"><div class="mc-price">₹260</div><div class="mc-tag">New</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=200&q=80" alt="Virgin"><div class="mc-body"><div class="mc-name">Velvet Virgin Sangria</div><p class="mc-desc">Grape juice, hibiscus, cinnamon, orange, apple, sparkling water. Rich and complex.</p><div class="mc-bottom"><div class="mc-price">₹290</div><div class="mc-tag">Signature</div></div></div></div>
+  </div>
+
+  <!-- BITES -->
+  <div class="menu-panel" id="bites">
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200&q=80" alt="Bruschetta"><div class="mc-body"><div class="mc-name">Truffle Bruschetta</div><p class="mc-desc">Sourdough crostini, whipped ricotta, black truffle oil, heirloom tomatoes, micro basil.</p><div class="mc-bottom"><div class="mc-price">₹380</div><div class="mc-tag">Popular</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&q=80" alt="Pizza"><div class="mc-body"><div class="mc-name">Ember Flatbread</div><p class="mc-desc">Wood-fired flatbread, fig jam, gorgonzola, caramelised onion, walnuts, rocket.</p><div class="mc-bottom"><div class="mc-price">₹520</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1541014741259-de529411b96a?w=200&q=80" alt="Nachos"><div class="mc-body"><div class="mc-name">Loaded Nachos</div><p class="mc-desc">Corn chips, three-cheese melt, jalapeño salsa, guacamole, crème fraîche.</p><div class="mc-bottom"><div class="mc-price">₹440</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1536510233921-8e5043ff8f9f?w=200&q=80" alt="Wings"><div class="mc-body"><div class="mc-name">Smoked Chicken Wings</div><p class="mc-desc">Hickory smoked, honey sriracha glaze, blue cheese dip, celery stalks.</p><div class="mc-bottom"><div class="mc-price">₹480</div><div class="mc-tag">Bestseller</div></div></div></div>
+  </div>
+
+  <!-- DESSERTS -->
+  <div class="menu-panel" id="desserts">
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&q=80" alt="Cake"><div class="mc-body"><div class="mc-name">Velvet Chocolate Cake</div><p class="mc-desc">Dark 72% ganache, candied hazelnuts, gold leaf, cocoa dust. Decadent and deep.</p><div class="mc-bottom"><div class="mc-price">₹360</div><div class="mc-tag">Signature</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&q=80" alt="Cheesecake"><div class="mc-body"><div class="mc-name">Burnt Basque Cheesecake</div><p class="mc-desc">Charred top, creamy centre, berry compote, vanilla bean cream. A Spanish classic.</p><div class="mc-bottom"><div class="mc-price">₹320</div><div class="mc-tag">Popular</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1579954115545-a95591f28bfc?w=200&q=80" alt="Tiramisu"><div class="mc-body"><div class="mc-name">Ember Tiramisù</div><p class="mc-desc">House espresso soaked savoiardi, mascarpone cream, single malt dusted. Adult dessert.</p><div class="mc-bottom"><div class="mc-price">₹340</div></div></div></div>
+    <div class="menu-card"><img class="mc-img" src="https://images.unsplash.com/photo-1567206563114-c179706f1c41?w=200&q=80" alt="Creme Brulee"><div class="mc-body"><div class="mc-name">Cardamom Crème Brûlée</div><p class="mc-desc">French custard, green cardamom, caramelised sugar crust, rose petal garnish.</p><div class="mc-bottom"><div class="mc-price">₹290</div><div class="mc-tag">New</div></div></div></div>
+  </div>
+</section>
+
+<!-- SPECIALS -->
+<section class="specials" id="specials">
+  <div class="spec-inner">
+    <div class="spec-left rev-l">
+      <img src="https://images.unsplash.com/photo-1470338745628-171cf53de3a8?w=700&q=80" alt="Bar Specials">
+    </div>
+    <div class="spec-right rev">
+      <div class="s-eyebrow">Tonight's Picks</div>
+      <h2 class="s-title">Bar <em>Specials</em></h2>
+      <p class="s-desc">Curated each evening by our head bartender. Limited quantities — arrive early or miss out.</p>
+      <div class="spec-items">
+        <div class="spec-item"><div class="spec-num">01</div><div><div class="spec-name">Kolkata Khichuri Sour</div><div class="spec-desc">Local hooch, turmeric bitters, lemon, ghee-washed bourbon. A city in a glass.</div></div><div class="spec-price">₹480</div></div>
+        <div class="spec-item"><div class="spec-num">02</div><div><div class="spec-name">Darjeeling Negroni</div><div class="spec-desc">First flush Darjeeling tea-infused gin, bitter aperitif, chamomile vermouth.</div></div><div class="spec-price">₹560</div></div>
+        <div class="spec-item"><div class="spec-num">03</div><div><div class="spec-name">Mustard Oil Martini</div><div class="spec-desc">Fat-washed tequila, vermouth, pickled mango brine, edible flower. Provocative.</div></div><div class="spec-price">₹540</div></div>
+        <div class="spec-item"><div class="spec-num">04</div><div><div class="spec-name">Mishti Doi White Russian</div><div class="spec-desc">Vodka, Kahlúa, mishti doi cream, cardamom dust, Bengali sweetness.</div></div><div class="spec-price">₹460</div></div>
+        <div class="spec-item"><div class="spec-num">05</div><div><div class="spec-name">Rasgulla Spritz</div><div class="spec-desc">Prosecco, rasgulla syrup, lychee, soda, rose essence. Festive and light.</div></div><div class="spec-price">₹420</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience">
+  <div class="rev" style="text-align:center">
+    <div class="s-eyebrow" style="justify-content:center">How We Do It</div>
+    <h2 class="s-title" style="text-align:center">The <em>Experience</em></h2>
+  </div>
+  <div class="exp-grid rev">
+    <div class="exp-card">
+      <div class="exp-icon">☕</div>
+      <div class="exp-name">Café Hours</div>
+      <p class="exp-txt">Slow mornings, great beans. Single origins brewed with intention. A quiet corner for work, words, or wandering thoughts.</p>
+      <div class="exp-time">Mon – Sun &nbsp;·&nbsp; 10 AM – 6 PM</div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-icon">🍸</div>
+      <div class="exp-name">Bar Hours</div>
+      <p class="exp-txt">As the lights dim, the bar comes alive. Craft cocktails, local spirits, and nights that evolve into stories.</p>
+      <div class="exp-time">Mon – Sun &nbsp;·&nbsp; 6 PM – 2 AM</div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-icon">🎷</div>
+      <div class="exp-name">Live Music</div>
+      <p class="exp-txt">Jazz on Fridays. Indie acoustic on Sundays. Occasional surprise sets midweek. No cover charge — ever.</p>
+      <div class="exp-time">Fri & Sun &nbsp;·&nbsp; 8 PM – 11 PM</div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section class="events" id="events">
+  <div class="rev">
+    <div class="s-eyebrow">What's On</div>
+    <h2 class="s-title">Upcoming <em>Events</em></h2>
+    <p class="s-desc">From jazz nights to cocktail masterclasses — there's always something worth dressing up for.</p>
+  </div>
+  <div class="events-grid rev">
+    <div class="ev-card">
+      <div class="ev-img">
+        <img src="https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=500&q=80" alt="Jazz">
+        <div class="ev-date"><div class="day">28</div><div class="month">Mar</div></div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-type">Live Music</div>
+        <div class="ev-name">Friday Jazz Ritual</div>
+        <p class="ev-info">The Calcutta Jazz Quartet returns. Three sets of original compositions and golden standards. Drinks flowing all night.</p>
+        <div class="ev-meta">
+          <div class="ev-time"><i class="fas fa-clock"></i> 8:00 PM – 11:30 PM</div>
+          <button class="ev-btn">RSVP</button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-card">
+      <div class="ev-img">
+        <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&q=80" alt="Cocktail">
+        <div class="ev-date"><div class="day">05</div><div class="month">Apr</div></div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-type">Masterclass</div>
+        <div class="ev-name">Cocktail Craft Workshop</div>
+        <p class="ev-info">Join our head bartender Anirban for a 2-hour hands-on workshop. Learn 4 cocktails from technique to presentation. Limited to 12 seats.</p>
+        <div class="ev-meta">
+          <div class="ev-time"><i class="fas fa-clock"></i> 6:00 PM – 8:00 PM</div>
+          <button class="ev-btn">Book ₹1200</button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-card">
+      <div class="ev-img">
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500&q=80" alt="Coffee Tasting">
+        <div class="ev-date"><div class="day">12</div><div class="month">Apr</div></div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-type">Coffee Experience</div>
+        <div class="ev-name">Single Origin Cupping</div>
+        <p class="ev-info">A guided tasting of five single-origin coffees from Coorg, Araku, Chikmagalur, and two international micro-lots.</p>
+        <div class="ev-meta">
+          <div class="ev-time"><i class="fas fa-clock"></i> 11:00 AM – 1:00 PM</div>
+          <button class="ev-btn">Book ₹800</button>
+        </div>
+      </div>
+    </div>
+    <div class="ev-card">
+      <div class="ev-img">
+        <img src="https://images.unsplash.com/photo-1496024840928-4c417adf211d?w=500&q=80" alt="Night">
+        <div class="ev-date"><div class="day">19</div><div class="month">Apr</div></div>
+      </div>
+      <div class="ev-body">
+        <div class="ev-type">Special Night</div>
+        <div class="ev-name">Velvet Black Night</div>
+        <p class="ev-info">Annual all-black dress code event. Dark cocktail menu, ambient electronica, exclusive limited-edition cocktail booklet. Tables must be reserved.</p>
+        <div class="ev-meta">
+          <div class="ev-time"><i class="fas fa-clock"></i> 9:00 PM – 2:00 AM</div>
+          <button class="ev-btn">Reserve</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section class="reservation" id="reservation">
+  <div class="res-inner">
+    <div class="res-left rev-l">
+      <div class="s-eyebrow">Book Your Evening</div>
+      <h2 class="s-title">Reserve a<br><em>Table</em></h2>
+      <p class="s-desc">Reservations recommended for weekends. Walk-ins welcome subject to availability. Parties of 8+ please call directly.</p>
+      <div class="res-vibe">
+        <div class="rv-item"><i class="fas fa-wine-glass-alt"></i> Complimentary welcome drink on first visit</div>
+        <div class="rv-item"><i class="fas fa-birthday-cake"></i> Special arrangements for celebrations</div>
+        <div class="rv-item"><i class="fas fa-lock"></i> Private lounge available for buyouts</div>
+        <div class="rv-item"><i class="fas fa-phone-alt"></i> For 8+ guests: +91 98300 77777</div>
+      </div>
+    </div>
+    <div class="rev">
+      <div class="res-form">
+        <h3>Make a Reservation</h3>
+        <p>We'll confirm your table within the hour.</p>
+        <div class="frow">
+          <div class="fg"><label>Your Name</label><input type="text" placeholder="Full name"></div>
+          <div class="fg"><label>Phone</label><input type="tel" placeholder="+91 98300 00000"></div>
+        </div>
+        <div class="fg"><label>Email Address</label><input type="email" placeholder="you@email.com"></div>
+        <div class="frow">
+          <div class="fg"><label>Date</label><input type="date"></div>
+          <div class="fg"><label>Time</label>
+            <select>
+              <option>Select Time</option>
+              <option>10:00 AM (Café)</option><option>12:00 PM (Lunch)</option>
+              <option>5:00 PM (Happy Hour)</option><option>7:00 PM (Dinner)</option>
+              <option>9:00 PM (Bar)</option><option>11:00 PM (Late Night)</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label>Guests</label>
+            <select>
+              <option>1 Person</option><option>2 People</option>
+              <option>3–4 People</option><option>5–6 People</option>
+              <option>7–8 People</option><option>9+ (Call Us)</option>
+            </select>
+          </div>
+          <div class="fg"><label>Seating</label>
+            <select>
+              <option>No Preference</option>
+              <option>Lounge Sofa</option><option>Bar Counter</option>
+              <option>Window Seat</option><option>Private Corner</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg"><label>Special Occasion / Request</label><textarea placeholder="Birthday? Anniversary? Dietary needs? Just want quiet corner?"></textarea></div>
+        <button class="res-sub" onclick="handleRes(this)">✦ &nbsp; Confirm Reservation</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT + MAP -->
+<section class="contact" id="contact" style="padding:0">
+  <div class="contact-inner">
+    <div class="contact-details">
+      <div>
+        <div class="cd-logo">V&E</div>
+        <div class="cd-tagline">Velvet & Ember Café · Bar · Lounge</div>
+      </div>
+      <div class="cd-item"><i class="fas fa-map-marker-alt"></i><div><div class="cd-label">Address</div><div class="cd-val">7 Bondel Road, Ballygunge<br>Kolkata — 700 019</div></div></div>
+      <div class="cd-item"><i class="fas fa-phone-alt"></i><div><div class="cd-label">Reservations</div><div class="cd-val">+91 98300 77777</div></div></div>
+      <div class="cd-item"><i class="fas fa-envelope"></i><div><div class="cd-label">Email</div><div class="cd-val">hello@velvetember.in</div></div></div>
+      <div class="cd-item"><i class="fas fa-clock"></i><div><div class="cd-label">Hours</div><div class="cd-val">Café: 10 AM – 6 PM<br>Bar: 6 PM – 2 AM (Daily)</div></div></div>
+    </div>
+    <div class="map-container">
+      <div class="map-tag">📍 Velvet & Ember</div>
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3685.5!2d88.3620!3d22.5225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a027!2sBondel%20Road%2C%20Ballygunge%2C%20Kolkata!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL -->
+<div class="social-strip">
+  <div class="ss-txt">Follow the Vibe</div>
+  <div class="ss-icons">
+    <a href="#" class="ss-ic"><i class="fab fa-instagram"></i></a>
+    <a href="#" class="ss-ic"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="ss-ic"><i class="fab fa-youtube"></i></a>
+    <a href="#" class="ss-ic"><i class="fab fa-twitter"></i></a>
+    <a href="#" class="ss-ic"><i class="fab fa-whatsapp"></i></a>
+    <a href="#" class="ss-ic"><i class="fab fa-tiktok"></i></a>
+  </div>
+  <div class="ss-txt">#VelvetAndEmber</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="fb">
+      <a href="#" class="logo" style="text-decoration:none">
+        <div class="logo-main" style="font-size:22px">VELVET & EMBER</div>
+        <div class="logo-sub">CAFÉ · BAR · LOUNGE</div>
+      </a>
+      <p>A sanctuary where specialty coffee meets craft cocktails. 7 Bondel Road, Ballygunge, Kolkata. Open daily. Reservations recommended.</p>
+    </div>
+    <div class="fc">
+      <h4>The Menu</h4>
+      <ul>
+        <li><a href="#">Specialty Coffees</a></li>
+        <li><a href="#">Craft Cocktails</a></li>
+        <li><a href="#">Mocktails</a></li>
+        <li><a href="#">Small Plates</a></li>
+        <li><a href="#">Desserts</a></li>
+        <li><a href="#">Bar Specials</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h4>Visit</h4>
+      <ul>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Gallery</a></li>
+        <li><a href="#">Events Calendar</a></li>
+        <li><a href="#">Private Hire</a></li>
+        <li><a href="#">Gift Vouchers</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="fc">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="#">Reservations</a></li>
+        <li><a href="#">WhatsApp Us</a></li>
+        <li><a href="#">Press & Media</a></li>
+        <li><a href="#">Feedback</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bot">
+    <p>© 2025 Velvet & Ember. All rights reserved. Made with <span>♥</span> in Kolkata.</p>
+    <div class="footer-bot-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<!-- CHATBOT -->
+<button class="chat-fab" id="chatFab" onclick="toggleChat()">
+  <i class="fas fa-comment" id="chatIco"></i>
+  <div class="fab-dot">1</div>
+</button>
+
+<div class="chatwin" id="chatWin">
+  <div class="chat-head">
+    <div>
+      <div class="chat-logo">V&E</div>
+      <div class="chat-sub">Velvet & Ember Concierge</div>
+    </div>
+    <div class="chat-live"><div class="live-dot"></div>&nbsp;Online</div>
+  </div>
+  <div class="chat-msgs" id="chatMsgs">
+    <div class="cm b"><div class="cav">◆</div><div class="cb">✨ Welcome to <strong>Velvet & Ember</strong>. How can I make your evening perfect? Ask me about reservations, our menu, events, or getting here.</div></div>
+    <div class="cm b"><div class="cav">◆</div><div class="cb">Tonight's bar is open until 2 AM. Happy hours run 5–8 PM. 🍸</div></div>
+  </div>
+  <div class="chat-chips">
+    <div class="chip" onclick="qr('🍽️ Reserve a Table')">🍽️ Reserve</div>
+    <div class="chip" onclick="qr('📜 View the Menu')">📜 Menu</div>
+    <div class="chip" onclick="qr('🎷 Upcoming Events')">🎷 Events</div>
+    <div class="chip" onclick="qr('⏰ Opening Hours')">⏰ Hours</div>
+    <div class="chip" onclick="qr('📍 Location & Directions')">📍 Location</div>
+    <div class="chip" onclick="qr('🎉 Private Hire')">🎉 Private</div>
+  </div>
+  <div class="chat-inp-wrap">
+    <input class="cinp" id="cinp" placeholder="Ask us anything..." onkeypress="ck(event)">
+    <button class="csnd" onclick="cs()"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+document.addEventListener('mousemove',e=>{
+  cur.style.left=e.clientX-5+'px';cur.style.top=e.clientY-5+'px';
+  curR.style.left=e.clientX-18+'px';curR.style.top=e.clientY-18+'px';
+});
+document.querySelectorAll('a,button,.ag-item,.ev-card,.spec-item,.menu-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.classList.add('xl');curR.classList.add('xl')});
+  el.addEventListener('mouseleave',()=>{cur.classList.remove('xl');curR.classList.remove('xl')});
+});
+
+// NAV
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('solid',scrollY>60);
+});
+
+// REVEAL
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in')})},{threshold:.08});
+document.querySelectorAll('.rev,.rev-l').forEach(el=>obs.observe(el));
+
+// MENU TABS
+function switchTab(id,btn){
+  document.querySelectorAll('.menu-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// CHAT
+let open=false;
+const bots={
+  'reserve a table':`🍽️ To reserve your table:\n\n1️⃣ Use the <strong>Reservation form</strong> on this page\n2️⃣ Call: <strong>+91 98300 77777</strong>\n3️⃣ WhatsApp the same number\n\nFor parties of 8+, please call directly.\n✨ Complimentary welcome drink on first visit!`,
+  'view the menu':`📜 <strong>Our Menu Highlights:</strong>\n\n☕ <strong>Coffees</strong> — Single origin, pour over, cold brew from ₹180\n🍸 <strong>Cocktails</strong> — Craft & signature from ₹460\n🥤 <strong>Mocktails</strong> — From ₹240\n🍽️ <strong>Small Plates</strong> — Truffle bruschetta, flatbread from ₹380\n🍮 <strong>Desserts</strong> — Velvet cake, tiramisu from ₹290\n\nScroll up to see the full menu with prices!`,
+  'upcoming events':`🎷 <strong>Upcoming Events:</strong>\n\n🎵 <strong>28 Mar</strong> — Friday Jazz Ritual (Free entry)\n🍹 <strong>5 Apr</strong> — Cocktail Craft Workshop (₹1,200)\n☕ <strong>12 Apr</strong> — Coffee Cupping (₹800)\n🖤 <strong>19 Apr</strong> — Velvet Black Night (By reservation)\n\nAll events at Velvet & Ember, Bondel Road. Limited seats!`,
+  'opening hours':`⏰ <strong>Our Hours:</strong>\n\n☕ <strong>Café:</strong> 10:00 AM – 6:00 PM (Daily)\n🍸 <strong>Bar:</strong> 6:00 PM – 2:00 AM (Daily)\n🎵 <strong>Happy Hours:</strong> 5:00 PM – 8:00 PM\n🎷 <strong>Live Music:</strong> Fri & Sun, 8 PM – 11 PM\n\nWe're open every single day. Come as you are! ✨`,
+  'location & directions':`📍 <strong>Velvet & Ember</strong>\n7 Bondel Road, Ballygunge\nKolkata — 700 019\n\n🚇 Nearest Metro: Rabindra Sarobar\n🚗 Parking available on street\n\n📞 <strong>+91 98300 77777</strong>\n📧 hello@velvetember.in`,
+  'private hire':`🎉 <strong>Private Hire:</strong>\n\nOur lounge can be exclusively hired for:\n• Corporate evenings\n• Birthday parties\n• Album launches / art shows\n• Intimate celebrations\n\nSeating for up to 45 guests.\nCustom menus & cocktail packages available.\n\nEnquire: <strong>+91 98300 77777</strong>`,
+};
+function toggleChat(){
+  open=!open;
+  document.getElementById('chatWin').classList.toggle('open',open);
+  document.getElementById('chatIco').className=open?'fas fa-times':'fas fa-comment';
+  document.querySelector('.fab-dot').style.display=open?'none':'flex';
+}
+function qr(t){
+  const k=t.replace(/[^a-z &]/gi,'').trim().toLowerCase();
+  addM(t,'u');
+  setTimeout(()=>{
+    const key=Object.keys(bots).find(b=>k.includes(b.split(' ')[0]));
+    addM(key?bots[key]:`Thanks for reaching out! 🥂\n\nFor anything you need:\n📞 <strong>+91 98300 77777</strong>\n📧 hello@velvetember.in\n\nWe'll get back to you before you finish your next drink. ✨`,'b');
+  },500);
+}
+function cs(){
+  const inp=document.getElementById('cinp');const t=inp.value.trim();if(!t)return;inp.value='';
+  addM(t,'u');
+  setTimeout(()=>{
+    const l=t.toLowerCase();let r;
+    if(l.includes('reserv')||l.includes('book')||l.includes('table'))r=bots['reserve a table'];
+    else if(l.includes('menu')||l.includes('food')||l.includes('drink')||l.includes('cocktail')||l.includes('coffee'))r=bots['view the menu'];
+    else if(l.includes('event')||l.includes('jazz')||l.includes('music')||l.includes('live'))r=bots['upcoming events'];
+    else if(l.includes('hour')||l.includes('open')||l.includes('time')||l.includes('close'))r=bots['opening hours'];
+    else if(l.includes('where')||l.includes('location')||l.includes('address')||l.includes('direct'))r=bots['location & directions'];
+    else if(l.includes('private')||l.includes('hire')||l.includes('party')||l.includes('event'))r=bots['private hire'];
+    else if(l.includes('price')||l.includes('cost')||l.includes('cheap')||l.includes('expensive'))r=`💰 <strong>Our Price Range:</strong>\n\nCoffees: ₹180 – ₹320\nMocktails: ₹240 – ₹290\nCocktails: ₹460 – ₹580\nFood: ₹280 – ₹520\nDesserts: ₹290 – ₹360\n\nHappy Hours (5–8 PM): All cocktails at 20% off! 🍹`;
+    else if(l.includes('hi')||l.includes('hello')||l.includes('hey'))r=`Hello, welcome! 🥂 Pull up a stool. What can I pour for you this evening? Ask about our menu, events, or make a reservation!`;
+    else if(l.includes('thank'))r=`The pleasure is ours. 🙏 We look forward to hosting you at Velvet & Ember. See you soon! ✨🍸`;
+    else r=`We'd love to help! 🥃\n\n📞 <strong>+91 98300 77777</strong>\n📧 hello@velvetember.in\n\nOr just walk in — the bar is always open.`;
+    addM(r,'b');
+  },600);
+}
+function addM(txt,type){
+  const box=document.getElementById('chatMsgs');
+  const d=document.createElement('div');d.className=`cm ${type}`;
+  d.innerHTML=type==='b'?`<div class="cav">◆</div><div class="cb">${txt.replace(/\n/g,'<br>')}</div>`:`<div class="cb">${txt}</div>`;
+  box.appendChild(d);box.scrollTop=box.scrollHeight;
+}
+function ck(e){if(e.key==='Enter')cs()}
+function handleRes(btn){
+  const o=btn.innerHTML;
+  btn.innerHTML='✦ &nbsp; Reservation Confirmed!';
+  btn.style.background='#2d6a4f';btn.style.color='#fff';
+  setTimeout(()=>{btn.innerHTML=o;btn.style.background='';btn.style.color=''},3500);
+}
+</script>
+</body>
+</html>
